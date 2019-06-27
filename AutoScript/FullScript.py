@@ -1,16 +1,16 @@
+import shutil
 import csv
 import os
-import shutil
 
 #####################################################################################
 ##### 1ª PARTE: RODA OS SCRIPTS NO SIMULADOR E SALVA AS SAIDAS EM ~/Results 	#####
 #####################################################################################
 algs = ["FastFourierTransform", "MultMatriz", "QuickSort"]
 execsCache = {"CacheAssoc": [1, 2, 4, 8, 16, 32], "CacheSize": [0.5, 1, 2, 4, 8, 16]}
-execsCPU = {"IntALU": [1, 2, 3, 4]}
+execsCPU = {"IntALU": [1, 2, 3, 4], "LatIntALU": [1, 2, 4, 8]}
 
 try:
-	os.system("rm -rf ~/Results")
+	os.system("rm -rf Results")
 except:
 	pass
 
@@ -19,7 +19,7 @@ for alg in algs:
 	cp_str = "cp algoritmos/" + alg + ".c ~/gem5/orgb_progs/" + alg + ".c"
 	os.system(cp_str)
 
-	exec_str = "gcc ~/gem5/orgb_progs/" + alg + ".c -O0 -lm -static -o ~/gem5/orgb_progs/" + alg
+	exec_str = "gcc ~/gem5/orgb_progs/" + alg + ".c -O0 -lm -lcrypto -static -o ~/gem5/orgb_progs/" + alg
 	os.system(exec_str)
 
 for ex in execsCPU:
@@ -40,11 +40,11 @@ for ex in execsCPU:
 			os.system(exec_str)
 
 			# Cria diretório para resultados
-			exec_str = "mkdir -p ~/Results/" + alg + "/" + ex
+			exec_str = "mkdir -p Results/" + alg + "/" + ex
 			os.system(exec_str)
 
 			src_result = "m5out/stats.txt"
-			dst_result = "~/Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
+			dst_result = "Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
 			os.system("cp "+ src_result + " " + dst_result)
 
 for ex in execsCache:
@@ -65,11 +65,11 @@ for ex in execsCache:
 			os.system(exec_str)
 
 			# Cria diretório para resultados
-			exec_str = "mkdir -p ~/Results/" + alg + "/" + ex
+			exec_str = "mkdir -p Results/" + alg + "/" + ex
 			os.system(exec_str)
 
 			src_result = "m5out/stats.txt"
-			dst_result = "~/Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
+			dst_result = "Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
 			os.system("cp "+ src_result + " " + dst_result)
 
 
@@ -79,7 +79,7 @@ for ex in execsCache:
 execs = execsCache.copy()
 execs.update(execsCPU)
 
-with open("saida.csv", mode='w', newline='') as saida_file:
+with open("Results/saida.csv", mode='w', newline='') as saida_file:
 	fieldnames = ['algoritmo', 'mudanca', 'exec', 'overall_miss_rate', 'sim_seconds', 'ipc', 'host_seconds', 'overall_accesses', 'overall_misses', 'overall_hits']
 	writer = csv.DictWriter(saida_file, fieldnames=fieldnames)
 	writer.writeheader()
@@ -87,7 +87,7 @@ with open("saida.csv", mode='w', newline='') as saida_file:
 	for algoritmo in algs:
 		for ex in execs: 
 			for num in execs[ex]:
-				file_name = algoritmo + "/" + ex + "/stats_" + str(num) + ".txt"
+				file_name = "Results/" + algoritmo + "/" + ex + "/stats_" + str(num) + ".txt"
 
 				print ("\n" + algoritmo + " -> " + ex + ": "+ str(num))
 

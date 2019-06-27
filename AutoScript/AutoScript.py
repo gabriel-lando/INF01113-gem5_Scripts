@@ -3,10 +3,10 @@ import shutil
 
 algs = ["FastFourierTransform", "MultMatriz", "QuickSort"]
 execsCache = {"CacheAssoc": [1, 2, 4, 8, 16, 32], "CacheSize": [0.5, 1, 2, 4, 8, 16]}
-execsCPU = {"IntALU": [1, 2, 3, 4]}
+execsCPU = {"IntALU": [1, 2, 3, 4], "LatIntALU": [1, 2, 4, 8]}
 
 try:
-	os.system("rm -rf ~/Results")
+	os.system("rm -rf Results")
 except:
 	pass
 
@@ -15,7 +15,7 @@ for alg in algs:
 	cp_str = "cp algoritmos/" + alg + ".c ~/gem5/orgb_progs/" + alg + ".c"
 	os.system(cp_str)
 
-	exec_str = "gcc ~/gem5/orgb_progs/" + alg + ".c -O0 -lm -static -o ~/gem5/orgb_progs/" + alg
+	exec_str = "gcc ~/gem5/orgb_progs/" + alg + ".c -O0 -lm -lcrypto -static -o ~/gem5/orgb_progs/" + alg
 	os.system(exec_str)
 
 for ex in execsCPU:
@@ -36,11 +36,11 @@ for ex in execsCPU:
 			os.system(exec_str)
 
 			# Cria diretório para resultados
-			exec_str = "mkdir -p ~/Results/" + alg + "/" + ex
+			exec_str = "mkdir -p Results/" + alg + "/" + ex
 			os.system(exec_str)
 
 			src_result = "m5out/stats.txt"
-			dst_result = "~/Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
+			dst_result = "Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
 			os.system("cp "+ src_result + " " + dst_result)
 
 for ex in execsCache:
@@ -61,10 +61,10 @@ for ex in execsCache:
 			os.system(exec_str)
 
 			# Cria diretório para resultados
-			exec_str = "mkdir -p ~/Results/" + alg + "/" + ex
+			exec_str = "mkdir -p Results/" + alg + "/" + ex
 			os.system(exec_str)
 
 			src_result = "m5out/stats.txt"
-			dst_result = "~/Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
+			dst_result = "Results/" + alg + "/" + ex + "/stats_" + str(num) + ".txt"
 			os.system("cp "+ src_result + " " + dst_result)
 
